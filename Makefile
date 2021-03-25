@@ -1,12 +1,5 @@
-TARGET = clojure-docker-hello
-PORT   = 8080:8080
-DOCKER = docker
-
 all:
-	$(DOCKER) build -t $(TARGET) .
-	$(DOCKER) run -d -p $(PORT) $(TARGET)
+	docker-compose up -d
 
-# clean:
-# 	docker stop $(docker ps -q)
-# 	docker rm $(docker ps -q -a)
-# 	docker rmi $(docker images -q)
+clean:
+	docker-compose down --rmi all

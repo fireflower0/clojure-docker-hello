@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: hello
+    image: clojure-docker-hello
+    build: .
+    ports:
+      - "8080:8080"
