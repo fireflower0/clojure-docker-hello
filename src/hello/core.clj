@@ -6,9 +6,9 @@
 (defonce server (atom nil))
 
 (defn handler [request]
-  (content-type
-   (response "<h1>Hello, world!</h1>")
-   "text/html"))
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body "<h1>Hello, world</h1>"})
 
 (defn start-server []
   (when-not @server
