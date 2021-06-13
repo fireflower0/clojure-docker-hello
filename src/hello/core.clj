@@ -5,10 +5,17 @@
 
 (defonce server (atom nil))
 
-(defn handler [request]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body "<h1>Hello, world</h1>"})
+(defn ok [body] {:status 200 :body body})
+
+(defn html [res]
+  (assoc res :headers {"Content-Type" "text/html; charset=utf-8"}))
+
+(defn view-index [req] "<h1>Index</h1>")
+
+(defn index [req] (-> (view-index req) ok html))
+
+(defn handler [req]
+  (index req))
 
 (defn start-server []
   (when-not @server
