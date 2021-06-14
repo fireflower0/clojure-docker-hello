@@ -1,7 +1,7 @@
 (ns hello.core
   (:gen-class)
-  (:use [ring.adapter.jetty]
-        [ring.util.response]))
+  (:require [ring.adapter.jetty :as s]
+            [ring.util.response]))
 
 (defonce server (atom nil))
 
@@ -20,10 +20,10 @@
 (defn start-server []
   (when-not @server
     (reset! server
-            (run-jetty handler
-                       {:address "0.0.0.0"
-                        :port 8080
-                        :join? false}))))
+            (s/run-jetty handler
+                         {:address "0.0.0.0"
+                          :port 8080
+                          :join? false}))))
 
 (defn stop-server []
   (when @server
