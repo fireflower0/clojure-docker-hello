@@ -1,36 +1,27 @@
 (ns hello.core
   (:gen-class)
-  (:require [ring.adapter.jetty :as s]
-            [ring.util.response]))
+  (:require [compojure.core :refer [defroutes context GET]]
+            [compojure.route :as route]
+            [ring.adapter.jetty :as s]
+            [ring.util.response :as res]))
 
 (defonce server (atom nil))
 
 (defn ok [body] {:status 200 :body body})
 
-(defn not-found []
-  {:status 404
-   :body "<h1>404 page not found</1>"})
-
 (defn html [res]
-  (assoc res :headers {"Content-Type" "text/html; charset=utf-8"}))
+  (res/content-type res "text/html; charset=utf-8"))
 
 (defn view-index [req] "<h1>Index</h1>")
 (defn view-about [req] "<h1>About</h1>")
 
-(defn index [req] (-> (view-index req) ok html))
-(defn about [req] (-> (view-about req) ok html))
+(defn index [req] (-> (view-index req) res/response html))
+(defn about [req] (-> (view-about req) res/response html))
 
-(def routes {"/" index "/about" about})
-
-(defn match-route [uri]
-  (get routes uri))
-
-(defn handler [req]
-  (let [uri (:uri req)
-        maybe-fn (match-route uri)]
-    (if maybe-fn
-      (maybe-fn req)
-      (not-found))))
+(defroutes handler
+  (GET "/" req index)
+  (GET "/about" req about)
+  (route/not-found "<h1>404 page not found</1>"))
 
 (defn start-server []
   (when-not @server
