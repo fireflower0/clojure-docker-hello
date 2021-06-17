@@ -12,15 +12,28 @@
 (defn html [res]
   (res/content-type res "text/html; charset=utf-8"))
 
+(def todo-list
+  [{:title "foo"}
+   {:title "bar"}
+   {:title "baz"}])
+
 (defn view-index [req] "<h1>Index</h1>")
 (defn view-about [req] "<h1>About</h1>")
+(defn view-todo [req]
+  `("<h1>ToDo List</h1>"
+    "<ul>"
+    ~@(for [{:keys [title]} todo-list]
+        (str "<li>" title "</li>"))
+    "</ul>"))
 
 (defn index [req] (-> (view-index req) res/response html))
 (defn about [req] (-> (view-about req) res/response html))
+(defn todo [req] (-> (view-todo req) res/response html))
 
 (defroutes handler
   (GET "/" req index)
   (GET "/about" req about)
+  (GET "/todo" req todo)
   (route/not-found "<h1>404 page not found</1>"))
 
 (defn start-server []
